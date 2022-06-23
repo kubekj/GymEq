@@ -1,0 +1,44 @@
+﻿@page "/postponeActivity/{id:int}"
+
+@inject IActivityService ActivityService
+@inject NavigationManager NavManager
+
+<h3>Postpone activity</h3>
+
+<EditForm Model="Activity" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Title" @bind-Value="Activity.Title" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Description" @bind-Value="Activity.Description" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+        </MudCardContent>
+    </MudCard>
+    <MudCard>
+        <MudCardContent>
+            <MudDatePicker Label="Start" T="DateTime" Format="s" @bind-Value="Activity.Start" Disabled="false" Variant="Variant.Outlined"></MudDatePicker>
+        </MudCardContent>
+    </MudCard>
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="End" T="DateTime" Format="s" @bind-Value="Activity.End" Disabled="false" Variant="Variant.Outlined"></MudTextField>
+        </MudCardContent>
+    </MudCard>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Activity Activity = new Activity();
+    DateTime NewTime = DateTime.UtcNow;
+
+    async Task HandleSubmit()
+    {
+        await ActivityService.PostponeActivity(NewTime,Id);
+    }
+}
+

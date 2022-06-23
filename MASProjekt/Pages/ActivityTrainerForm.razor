@@ -1,0 +1,106 @@
+﻿@page "/assignTrainer/{id:int}"
+
+@inject IActivityService ActivityService
+@inject ITrainerService TrainerService
+@inject NavigationManager NavManager
+
+@if (Trainers != null && Trainers.Any())
+{
+    <h3>Please assign a trainer !</h3>
+
+    <EditForm Model="Activity" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <MudCard>
+            <MudCardContent>
+                <MudTextField Label="Title" @bind-Value="Activity.Title" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="Description" @bind-Value="Activity.Description" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="Start" T="DateTime" Format="s" @bind-Value="Activity.Start" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="End" T="DateTime" Format="s" @bind-Value="Activity.End" Disabled="true" Variant="Variant.Outlined"></MudTextField>
+            </MudCardContent>
+        </MudCard>
+        <MudCard>
+            <MudCardContent>
+                <MudSelect Label="Trainer" @bind-Value="Activity.TrainerId" HelperText="Please select preferred trainer" Class="mr-4 mt-4">
+                    @foreach (var trainer in Trainers)
+                        {
+                            <MudSelectItem Value="(int?)trainer.ID">@trainer.Name @trainer.Surname</MudSelectItem>
+                        }
+                </MudSelect>
+            </MudCardContent>
+        </MudCard>
+        <MudButton ButtonType="ButtonType.Submit" Class="mr-4 mt-4">
+            Assign Trainer
+        </MudButton>
+    </EditForm>
+}
+else
+{
+    <h3>There are no trainers available at that time, would You like to cancel the activity or postpone it ?</h3>
+    <MudPaper Height="400px" Width="100%">
+        <MudContainer MaxWidth="MaxWidth.Small">
+            <MudPaper Height="400px" Width="100%" Square="true" Class="mud-theme-primary">
+                <MudButton>
+                    Call off
+                </MudButton>
+
+                <MudButton OnClick="RedirectToPostpone">
+                    Postpone
+                </MudButton>
+            </MudPaper>
+        </MudContainer>
+    </MudPaper>
+}
+
+<MudButton OnClick="HandleCancel">
+    Cancel
+</MudButton>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Activity Activity = new Activity();
+    List<Trainer> Trainers = new List<Trainer>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Activity = await ActivityService.GetActivity(Id);
+        Trainers = await TrainerService.LoadFreeTrainers(Id);
+    }
+
+    async Task DeleteActivity()
+    {
+        await ActivityService.RemoveActivity(Activity.ID);
+    }
+
+    void HandleCancel()
+    {
+        Activity.TrainerId = null;
+        RedirectToMainPage();
+    }
+
+    void RedirectToPostpone()
+    {
+        NavManager.NavigateTo($"/postponeActivity/{Id}");
+    }
+
+    void RedirectToMainPage()
+    {
+        NavManager.NavigateTo($"/activities");
+    }
+
+    async void HandleSubmit()
+    {
+        try
+        {
+            await ActivityService.AssignTrainer((int)Activity.TrainerId, Id);
+            RedirectToMainPage();
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+}
+

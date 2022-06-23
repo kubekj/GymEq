@@ -1,0 +1,41 @@
+﻿@page "/trainers"
+@inject ITrainerService TrainerService
+@inject NavigationManager NavManager
+
+<h3>Activities</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Trainer ID</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trainer in TrainerService.Trainers)
+        {
+            <tr>
+                <td>@trainer.Name</td>
+                <td>@trainer.Surname</td>
+                <td>@trainer.Email</td>
+                <td>@trainer.Gender</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code{
+    protected override async Task OnInitializedAsync()
+    {
+        await TrainerService.LoadTrainers();
+    }
+
+    void ShowActivity(int id)
+    {
+        NavManager.NavigateTo($"activities");
+    }
+}
