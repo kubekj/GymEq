@@ -11,7 +11,7 @@ namespace MASProjekt.Models
             Activities = new List<Activity>();
         }
 
-		private static readonly float AgreementDiscount = 0.25f;
+		private static readonly float _agreementDiscount = 0.25f;
 
         public ICollection<PersonalTraining> PersonalTrainings { get; set; }
 		public ICollection<Activity> Activities { get; set; }

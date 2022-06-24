@@ -11,7 +11,7 @@ namespace MASProjekt.Services
 
         Task<List<Trainer>> LoadFreeTrainers(int id);
 
-        Task<Trainer> GetTrainer(int? id);
+        Task<Trainer> GetTrainer(int id);
     }
 }
 

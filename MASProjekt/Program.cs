@@ -4,6 +4,7 @@ using MASProjekt.Data;
 using Microsoft.EntityFrameworkCore;
 using MASProjekt.Services;
 using MudBlazor.Services;
+using MudBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +16,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<ITrainerService, TrainerService>();
+builder.Services.AddScoped<IDialogService, DialogService>();
 
 var app = builder.Build();
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

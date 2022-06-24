@@ -26,19 +26,13 @@
                     <td>@activity.Description</td>
                     <td>@activity.Start</td>
                     <td>@activity.End</td>
-                    @if (GetTrainer(activity.TrainerId) != null)
-                    {
-                        <td>@GetTrainer(activity.TrainerId).Name</td>
-                    }
-                    else
-                    {
-                        <td>
-                            <button class="btn btn-primary"
-                                    @onclick="(() => ShowActivity(activity.ID))">
-                                Assing
-                            </button>
-                        </td>
-                    }
+                    <td>@GetTrainer(activity.TrainerId).Name</td>
+                    <td>
+                        <button class="btn btn-primary"
+                        @onclick="(() => ShowActivity(activity.ID))">
+                            Replace
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -56,9 +50,9 @@ else
         await TrainerService.LoadTrainers();
     }
 
-    Trainer GetTrainer(int? id)
+    Trainer GetTrainer(int id)
     {
-        return TrainerService.Trainers.FirstOrDefault(x => x.ID == id);
+        return TrainerService.Trainers.First(x => x.ID == id);
     }
 
     void ShowActivity(int id)

@@ -13,10 +13,21 @@ namespace MASProjekt.Models
         [Required]
 		public TrainingType TrainingType { get; set; }
 
-		private static readonly int MaxTrainingDuration = 90;
+		private static readonly int _maxTrainingDuration = 90;
 
+        private int duration;
         [Required]
-		public int Duration { get; set; }
+		public int Duration
+        {
+            get { return duration; }
+            set
+            {
+                if (value > _maxTrainingDuration || value <= 0)
+                    return;
+
+                duration = value;
+            }
+        }
 
         [Required]
         [MaxLength(300)]

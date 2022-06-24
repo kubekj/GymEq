@@ -13,7 +13,7 @@ namespace MASProjekt.Services
 
 		Task AssignTrainer(int trainerID, int activityID);
 
-		Task PostponeActivity(DateTime newTime,int id);
+		Task PostponeActivity(DateTime newTime, int id);
 
 		Task RemoveActivity(int id);
 	}

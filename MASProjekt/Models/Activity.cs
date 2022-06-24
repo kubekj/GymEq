@@ -31,11 +31,26 @@ namespace MASProjekt.Models
         public DateTime End { get; set; }
 
         [ForeignKey(nameof(TrainerId))]
-        public Trainer? Trainer { get; set; }
+        public Trainer Trainer { get; set; }
 
-		public int? TrainerId { get; set; }
+		public int TrainerId { get; set; }
 
-		public ICollection<ClubMember> ClubMembers { get; set; }
+        private ICollection<ClubMember> clubMembers;
+		public ICollection<ClubMember> ClubMembers
+        {
+            get { return clubMembers; }
+            set
+            {
+                if (value.Count < _minimalAtendeesCount || value.Count > _maximalAtendeesCount)
+                {
+                    return;
+                }
+                else
+                {
+                    clubMembers = value;
+                }
+            }
+        }
     }
 }
 

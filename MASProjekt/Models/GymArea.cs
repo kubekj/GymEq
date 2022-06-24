@@ -18,7 +18,7 @@ namespace MASProjekt.Models
         //Kompozycja
         [Required]
         [ForeignKey(nameof(GymId))]
-		private Gym Gym { get; set; }
+		public Gym Gym { get; set; }
 
         [Required]
         public int GymId { get; set; }

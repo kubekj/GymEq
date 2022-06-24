@@ -55,7 +55,7 @@ namespace MASProjekt.Migrations
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     End = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TrainerId = table.Column<int>(type: "integer", nullable: true)
+                    TrainerId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,18 +78,12 @@ namespace MASProjekt.Migrations
                     UniqueNumber = table.Column<int>(type: "integer", nullable: true),
                     AmountToPay = table.Column<float>(type: "real", nullable: true),
                     AmountPayed = table.Column<float>(type: "real", nullable: true),
-                    ActivityID = table.Column<int>(type: "integer", nullable: true),
                     YearsOfExperience = table.Column<int>(type: "integer", nullable: true),
                     HoursOfWorkInCurrentMonth = table.Column<float>(type: "real", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Person", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Person_Activities_ActivityID",
-                        column: x => x.ActivityID,
-                        principalTable: "Activities",
-                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -178,7 +172,7 @@ namespace MASProjekt.Migrations
             migrationBuilder.InsertData(
                 table: "Person",
                 columns: new[] { "ID", "ActivityID", "AmountPayed", "AmountToPay", "Birthday", "Discriminator", "Email", "Gender", "Name", "SecondName", "Surname", "UniqueNumber" },
-                values: new object[] { 2, null, 120044f, 1000f, new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9470), "ClubMember", "ee@wp.pl", "Men", "Andrzej", null, "Kejra", 1367244050 });
+                values: new object[] { 2, null, 120044f, 1000f, new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6480), "ClubMember", "ee@wp.pl", "Men", "Andrzej", null, "Kejra", 1061559117 });
 
             migrationBuilder.InsertData(
                 table: "Person",
@@ -198,12 +192,12 @@ namespace MASProjekt.Migrations
             migrationBuilder.InsertData(
                 table: "Activities",
                 columns: new[] { "ID", "Description", "End", "Start", "Title", "TrainerId" },
-                values: new object[] { 1, "Tanczymy do rana", new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450), new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450), "Zamba", 1 });
+                values: new object[] { 1, "Tanczymy do rana", new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6460), new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6460), "Zamba", 1 });
 
             migrationBuilder.InsertData(
                 table: "Agreements",
                 columns: new[] { "IdGym", "IdPerson", "AgreementType", "ResignationDate", "SignUpDate" },
-                values: new object[] { 1, 1, 1, new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450), new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450) });
+                values: new object[] { 1, 1, 1, new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6470), new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6470) });
 
             migrationBuilder.InsertData(
                 table: "GymAreas",
@@ -255,7 +249,8 @@ namespace MASProjekt.Migrations
                 table: "Activities",
                 column: "TrainerId",
                 principalTable: "Person",
-                principalColumn: "ID");
+                principalColumn: "ID",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

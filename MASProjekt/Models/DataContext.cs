@@ -23,6 +23,7 @@ namespace MASProjekt.Data
         public virtual DbSet<PersonalTraining> PersonalTrainings { get; set; }
         public virtual DbSet<Trainer> Trainers { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -41,6 +42,13 @@ namespace MASProjekt.Data
                 .HasConversion(
                     v => v.ToString(),
                     v => (TrainingType)Enum.Parse(typeof(TrainingType), v));
+
+            modelBuilder
+                .Entity<Agreement>()
+                .Property(e => e.AgreementType)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (AgreementType)Enum.Parse(typeof(AgreementType), v));
 
             modelBuilder.Entity<Cleaning>()
                 .Property(e => e.MaterialsUsed)

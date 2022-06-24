@@ -2,11 +2,12 @@
 
 @inject IActivityService ActivityService
 @inject ITrainerService TrainerService
+@inject IDialogService DialogService
 @inject NavigationManager NavManager
 
 @if (Trainers != null && Trainers.Any())
 {
-    <h3>Please assign a trainer !</h3>
+    <h3>Please assign a new trainer !</h3>
 
     <EditForm Model="Activity" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator />
@@ -20,38 +21,42 @@
         </MudCard>
         <MudCard>
             <MudCardContent>
-                <MudSelect Label="Trainer" @bind-Value="Activity.TrainerId" HelperText="Please select preferred trainer" Class="mr-4 mt-4">
+                <MudSelect Label="Trainer" @bind-Value="Activity.TrainerId" HelperText="Please select preferred trainer" Class="mr-4 mt-4" Placeholder="---">
                     @foreach (var trainer in Trainers)
                         {
-                            <MudSelectItem Value="(int?)trainer.ID">@trainer.Name @trainer.Surname</MudSelectItem>
+                        <MudSelectItem Value="trainer.ID">@trainer.Name @trainer.Surname</MudSelectItem>
                         }
                 </MudSelect>
             </MudCardContent>
         </MudCard>
-        <MudButton ButtonType="ButtonType.Submit" Class="mr-4 mt-4">
+        <MudButton ButtonType="ButtonType.Submit" Class="mr-4 mt-4" Variant="Variant.Filled" Color="Color.Primary">
             Assign Trainer
         </MudButton>
     </EditForm>
 }
 else
 {
-    <h3>There are no trainers available at that time, would You like to cancel the activity or postpone it ?</h3>
-    <MudPaper Height="400px" Width="100%">
-        <MudContainer MaxWidth="MaxWidth.Small">
-            <MudPaper Height="400px" Width="100%" Square="true" Class="mud-theme-primary">
-                <MudButton>
+    <h3>There are no trainers available at that time</h3>
+
+    <MudContainer Class="d-flex justify-center align-center">
+        <MudPaper Elevation="1" Class="pa-10" style="text-align:center">
+            <MudContainer Class="d-flex flex-column justify-center" style="width: 450px">
+                <h6>No one can take it from previous trainer, would You like to call off the activity or postpone it ?</h6>
+
+                <MudButton OnClick="RedirectToPostpone" Class="align-self-center mt-6" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Send" Color="Color.Primary">
+                    Postpone
+                </MudButton>
+
+                <MudButton OnClick="DeleteActivity" Class="align-self-center mt-3" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error">
                     Call off
                 </MudButton>
 
-                <MudButton OnClick="RedirectToPostpone">
-                    Postpone
-                </MudButton>
-            </MudPaper>
-        </MudContainer>
-    </MudPaper>
+            </MudContainer>
+        </MudPaper>
+    </MudContainer>
 }
 
-<MudButton OnClick="HandleCancel">
+<MudButton OnClick="RedirectToMainPage" Class="align-center" Variant="Variant.Filled" Color="Color.Warning">
     Cancel
 </MudButton>
 
@@ -71,17 +76,17 @@ else
     async Task DeleteActivity()
     {
         await ActivityService.RemoveActivity(Activity.ID);
-    }
-
-    void HandleCancel()
-    {
-        Activity.TrainerId = null;
         RedirectToMainPage();
     }
 
     void RedirectToPostpone()
     {
         NavManager.NavigateTo($"/postponeActivity/{Id}");
+    }
+
+    async void HandleCancel()
+    {
+        RedirectToMainPage();
     }
 
     void RedirectToMainPage()
@@ -91,16 +96,9 @@ else
 
     async void HandleSubmit()
     {
-        try
-        {
-            await ActivityService.AssignTrainer((int)Activity.TrainerId, Id);
+            await ActivityService.AssignTrainer(Activity.TrainerId, Id);
+            await DialogService.ShowMessageBox("Success", "You have succesfully assigned a trainer !");
             RedirectToMainPage();
-        }
-        catch (Exception ex)
-        {
-
-        }
-
     }
 }
 

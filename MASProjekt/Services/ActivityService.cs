@@ -60,11 +60,11 @@ namespace MASProjekt.Services
             if (activityAtThatTime != null)
                 throw new Exception("Activity at that time already exists! You can try again or just remove the activity.");
 
-            if (newTime <= DateTime.UtcNow)
+            if (newTime.Date <= DateTime.UtcNow.Date)
                 throw new Exception("New start time cannot be in the past.");
 
             dbActivity.Start = newTime;
-            dbActivity.End = dbActivity.Start.AddMinutes(60);
+            dbActivity.End = newTime.AddHours(1);
 
             await _context.SaveChangesAsync();
         }
@@ -76,7 +76,7 @@ namespace MASProjekt.Services
             if (dbActivity == null)
                 throw new Exception("Activity doesn't exists");
 
-            Activities.Remove(dbActivity);
+            _context.Activities.Remove(dbActivity);
 
             await _context.SaveChangesAsync();
         }

@@ -7,10 +7,7 @@ namespace MASProjekt.Models
 	{
 		public Owner()
 		{
-			Agreements = new List<Agreement>();
 		}
-
-		public ICollection<Agreement> Agreements { get; set; }
 	}
 }
 

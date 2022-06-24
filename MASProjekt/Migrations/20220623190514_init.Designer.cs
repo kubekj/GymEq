@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MASProjekt.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220623120948_init")]
+    [Migration("20220623190514_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace MASProjekt.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TrainerId")
+                    b.Property<int>("TrainerId")
                         .HasColumnType("integer");
 
                     b.HasKey("ID");
@@ -61,8 +61,8 @@ namespace MASProjekt.Migrations
                         {
                             ID = 1,
                             Description = "Tanczymy do rana",
-                            End = new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450),
-                            Start = new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450),
+                            End = new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6460),
+                            Start = new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6460),
                             Title = "Zamba",
                             TrainerId = 1
                         });
@@ -98,8 +98,8 @@ namespace MASProjekt.Migrations
                             IdGym = 1,
                             IdPerson = 1,
                             AgreementType = 1,
-                            ResignationDate = new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450),
-                            SignUpDate = new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9450)
+                            ResignationDate = new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6470),
+                            SignUpDate = new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6470)
                         });
                 });
 
@@ -316,8 +316,8 @@ namespace MASProjekt.Migrations
                             Surname = "Kejra",
                             AmountPayed = 120044f,
                             AmountToPay = 1000f,
-                            Birthday = new DateTime(2022, 6, 23, 12, 9, 48, 770, DateTimeKind.Utc).AddTicks(9470),
-                            UniqueNumber = 1367244050
+                            Birthday = new DateTime(2022, 6, 23, 19, 5, 14, 407, DateTimeKind.Utc).AddTicks(6480),
+                            UniqueNumber = 1061559117
                         });
                 });
 
@@ -423,7 +423,9 @@ namespace MASProjekt.Migrations
                 {
                     b.HasOne("MASProjekt.Models.Trainer", "Trainer")
                         .WithMany("Activities")
-                        .HasForeignKey("TrainerId");
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Trainer");
                 });

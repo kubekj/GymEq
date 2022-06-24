@@ -26,13 +26,15 @@ namespace MASProjekt.Services
             var activity = await _context.Activities.FindAsync(id);
 
             //trenerzy ktorzy nie maja w trakcie wskazanych zajęc akurat przypisanych zajęc
+            var trainers = await _context.Trainers.Where(x => !x.Activities.Any() || !x.Activities.Any(x => x.Start == activity.Start)).Select(x => x).ToListAsync();
 
-            var trainers = await _context.Activities.Select(x => x.Trainer).Where(x => x.Activities.Any(x => x.Start.Date != activity.Start.Date) || !x.Activities.Any()).ToListAsync();
-
+            if (trainers.Count > 0)
+                trainers.Add(activity.Trainer);
+            
             return trainers;
         } 
 
-        public async Task<Trainer> GetTrainer(int? id)
+        public async Task<Trainer> GetTrainer(int id)
         {
             var trainer = await _context.Trainers.FindAsync(id);
 

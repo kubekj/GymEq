@@ -7,12 +7,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Trainer ID</th>
-            <th></th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Email</th>
+            <th>Gender</th>
         </tr>
     </thead>
     <tbody>
@@ -32,10 +30,5 @@
     protected override async Task OnInitializedAsync()
     {
         await TrainerService.LoadTrainers();
-    }
-
-    void ShowActivity(int id)
-    {
-        NavManager.NavigateTo($"activities");
     }
 }

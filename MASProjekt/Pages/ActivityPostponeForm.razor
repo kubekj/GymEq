@@ -2,6 +2,7 @@
 
 @inject IActivityService ActivityService
 @inject NavigationManager NavManager
+@inject IDialogService DialogService
 
 <h3>Postpone activity</h3>
 
@@ -10,35 +11,73 @@
     <MudCard>
         <MudCardContent>
             <MudTextField Label="Title" @bind-Value="Activity.Title" Disabled="true" Variant="Variant.Outlined"></MudTextField>
-        </MudCardContent>
-    </MudCard>
-    <MudCard>
-        <MudCardContent>
             <MudTextField Label="Description" @bind-Value="Activity.Description" Disabled="true" Variant="Variant.Outlined"></MudTextField>
         </MudCardContent>
     </MudCard>
     <MudCard>
         <MudCardContent>
-            <MudDatePicker Label="Start" T="DateTime" Format="s" @bind-Value="Activity.Start" Disabled="false" Variant="Variant.Outlined"></MudDatePicker>
+            <MudTextField Label="Previous time" T="DateTime" Format="s" @bind-Value="Activity.Start" Disabled="true" Variant="Variant.Outlined"></MudTextField>
         </MudCardContent>
     </MudCard>
     <MudCard>
         <MudCardContent>
-            <MudTextField Label="End" T="DateTime" Format="s" @bind-Value="Activity.End" Disabled="false" Variant="Variant.Outlined"></MudTextField>
+            <MudDatePicker Label="Start" @bind-Date="@NewTime" Disabled="false" Variant="Variant.Outlined" Error="NewTime.Value.Date < DateTime.UtcNow.Date" ErrorText="Date cannot be in the past"></MudDatePicker>
+            <MudTimePicker Label="Start time" HelperText="Change time" Variant="Variant.Outlined"
+                           TimeChanged="@((args) => {
+                                              NewTime = NewTime.Value.Date;  NewTime = NewTime.Value.AddHours(args.Value.Hours); NewTime = NewTime.Value.AddMinutes(args.Value.Minutes);
+                                              NewEndTime = NewTime.Value.AddHours(1); })"></MudTimePicker>
         </MudCardContent>
     </MudCard>
+    <MudCard>
+        <MudCardContent>
+            <p>Chosen time: @NewTime</p>
+            <p>End time: @NewEndTime</p>
+        </MudCardContent>
+    </MudCard>
+    <MudButton ButtonType="ButtonType.Submit" Class="mr-4 mt-4" Variant="Variant.Filled" Color="Color.Primary">
+        Postpone activity
+    </MudButton>
 </EditForm>
+
+<MudButton OnClick="RedirectToMainPage" Class="align-center" Variant="Variant.Filled" Color="Color.Warning">
+    Cancel
+</MudButton>
+
+
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
     Activity Activity = new Activity();
-    DateTime NewTime = DateTime.UtcNow;
+    DateTime? NewTime = new DateTime();
+    DateTime? NewEndTime = new DateTime();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Activity = await ActivityService.GetActivity(Id);
+        NewTime = Activity.Start;
+        NewEndTime = Activity.End;
+    }
+
+    void RedirectToMainPage()
+    {
+        NavManager.NavigateTo($"assignTrainer/{Id}");
+    }
 
     async Task HandleSubmit()
     {
-        await ActivityService.PostponeActivity(NewTime,Id);
+        var opt = new DialogOptions { CloseButton = true};
+        try
+        {
+            await ActivityService.PostponeActivity(NewTime.Value, Id);
+            await DialogService.ShowMessageBox("Success", "You have succesfully postponed the activity !");
+            RedirectToMainPage();
+        }
+        catch (Exception ex)
+        {
+            await DialogService.ShowMessageBox("Error", ex.Message);
+        }
     }
 }
 
