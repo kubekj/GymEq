@@ -6,6 +6,26 @@ namespace MASProjekt.Models
 {
 	public class GymArea
 	{
+        private GymArea() { }
+
+        private GymArea(int id,Gym gym,string name, string[] equipment)
+        {
+            ID = id;
+            Gym = gym;
+            Name = name;
+            Equipment = equipment;
+        }
+
+        public static GymArea Create(int id, Gym gym, string name, string[] equipment)
+        {
+            if (gym == null)
+                throw new Exception("Strefa silowni nie moze powstac bez silowni");
+
+            GymArea gymArea = new GymArea(id, gym, name, equipment);
+
+            return gymArea;
+        }
+
         [Key]
 		public int ID { get; set; }
 

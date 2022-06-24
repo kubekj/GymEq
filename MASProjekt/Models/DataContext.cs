@@ -1,5 +1,4 @@
 ﻿using System;
-using MASProjekt.Configuration;
 using MASProjekt.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -125,16 +124,6 @@ namespace MASProjekt.Data
                 {
                     ID = 1,
                     Adress = "Szamocka 51"
-                }
-            );
-
-            modelBuilder.Entity<GymArea>().HasData(
-                new GymArea
-                {
-                    ID = 1,
-                    Name = "Wolne ciezary",
-                    Equipment = new string[] { "lawka", "lina" },
-                    GymId = 1
                 }
             );
 

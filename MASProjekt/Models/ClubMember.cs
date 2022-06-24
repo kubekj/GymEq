@@ -6,11 +6,17 @@ namespace MASProjekt.Data
     {
         public ClubMember()
         {
-            Agreements = new List<Agreement>();
+            if (_counter == int.MaxValue)
+                throw new Exception("System have run out of unique numbers, please contact with support +48 997");
+
+            UniqueNumber = _counter++;
         }
 
         public DateTime Birthday { get; set; }
-        public int UniqueNumber { get; internal set; }
+
+        private static int _counter;
+        public int UniqueNumber { get; set; }
+
         public float AmountToPay { get; internal set; }
         public float AmountPayed { get; internal set; }
 
@@ -31,7 +37,5 @@ namespace MASProjekt.Data
                 }
             }
         }
-
-        public ICollection<Agreement> Agreements { get; set; }
     }
 }
