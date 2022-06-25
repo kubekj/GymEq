@@ -29,9 +29,8 @@ namespace MASProjekt.Models
             }
         }
 
-        [Required]
         [MaxLength(300)]
-		public string Opinion { get; set; }
+		public string? Opinion { get; set; }
 
         [ForeignKey(nameof(ClubMemberId))]
 		public ClubMember ClubMember { get; set; }

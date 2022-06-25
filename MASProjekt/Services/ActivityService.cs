@@ -60,7 +60,7 @@ namespace MASProjekt.Services
             if (activityAtThatTime != null)
                 throw new Exception("Activity at that time already exists! You can try again or just remove the activity.");
 
-            if (newTime.Date <= DateTime.UtcNow.Date)
+            if (newTime.Date < DateTime.UtcNow.Date)
                 throw new Exception("New start time cannot be in the past.");
 
             dbActivity.Start = newTime;

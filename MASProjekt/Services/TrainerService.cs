@@ -43,21 +43,6 @@ namespace MASProjekt.Services
 
             return trainer;
         }
-
-        #region Przyklad kompozycji - sprzatanie
-
-        public async Task AddCleaning(int maidId, Cleaning cleaning)
-        {
-            var maid = await _context.Maids.FindAsync(maidId);
-
-            if (maid == null)
-                throw new Exception("Cannot do that");
-
-            maid.Cleanings.Add(cleaning);
-
-            await _context.SaveChangesAsync();
-        }
-        #endregion
     }
 }
 

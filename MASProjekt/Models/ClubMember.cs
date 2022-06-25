@@ -6,6 +6,8 @@ namespace MASProjekt.Data
     {
         public ClubMember()
         {
+            Activities = new List<Activity>();
+
             if (_counter == int.MaxValue)
                 throw new Exception("System have run out of unique numbers, please contact with support +48 997");
 
@@ -37,5 +39,7 @@ namespace MASProjekt.Data
                 }
             }
         }
+
+        public ICollection<Activity> Activities { get; set; }
     }
 }
